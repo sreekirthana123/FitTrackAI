@@ -1,0 +1,1175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FitTrack AI — Track. Predict. Thrive.</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+  :root {
+    --bg: #080c12;
+    --bg2: #0d1117;
+    --card: #111827;
+    --card2: #1a2235;
+    --border: rgba(0,212,255,0.12);
+    --cyan: #00d4ff;
+    --green: #00ff88;
+    --amber: #ffb800;
+    --red: #ff4757;
+    --purple: #a855f7;
+    --text: #f0f6fc;
+    --muted: #8b949e;
+    --font-head: 'Syne', sans-serif;
+    --font-body: 'Space Grotesk', sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    overflow-x: hidden;
+  }
+
+  /* ── NOISE OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.4;
+  }
+
+  /* ── NAVBAR ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 60px;
+    background: rgba(8,12,18,0.85);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .logo {
+    font-family: var(--font-head);
+    font-size: 1.5rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--cyan), var(--green));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: -0.5px;
+  }
+
+  .logo span { color: var(--muted); }
+
+  nav ul {
+    display: flex;
+    gap: 40px;
+    list-style: none;
+  }
+
+  nav ul a {
+    text-decoration: none;
+    color: var(--muted);
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: color 0.3s;
+    letter-spacing: 0.3px;
+  }
+
+  nav ul a:hover { color: var(--cyan); }
+
+  .nav-cta {
+    display: flex;
+    gap: 12px;
+  }
+
+  .btn {
+    padding: 10px 24px;
+    border-radius: 8px;
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .btn-outline {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text);
+  }
+
+  .btn-outline:hover {
+    border-color: var(--cyan);
+    color: var(--cyan);
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, var(--cyan), #0099cc);
+    border: none;
+    color: #080c12;
+    font-weight: 700;
+    box-shadow: 0 0 20px rgba(0,212,255,0.3);
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 30px rgba(0,212,255,0.5);
+  }
+
+  .btn-green {
+    background: linear-gradient(135deg, var(--green), #00cc6a);
+    border: none;
+    color: #080c12;
+    font-weight: 700;
+    font-size: 1rem;
+    padding: 14px 36px;
+    border-radius: 10px;
+    box-shadow: 0 0 25px rgba(0,255,136,0.3);
+  }
+
+  .btn-green:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 0 40px rgba(0,255,136,0.5);
+  }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 120px 60px 80px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Animated grid background */
+  .hero::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    animation: gridMove 20s linear infinite;
+  }
+
+  @keyframes gridMove {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(60px); }
+  }
+
+  /* Glowing orbs */
+  .orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.15;
+    animation: orbFloat 8s ease-in-out infinite;
+  }
+
+  .orb1 {
+    width: 400px; height: 400px;
+    background: var(--cyan);
+    top: 10%; left: -5%;
+    animation-delay: 0s;
+  }
+
+  .orb2 {
+    width: 350px; height: 350px;
+    background: var(--green);
+    top: 20%; right: -5%;
+    animation-delay: 3s;
+  }
+
+  .orb3 {
+    width: 300px; height: 300px;
+    background: var(--purple);
+    bottom: 10%; left: 30%;
+    animation-delay: 6s;
+  }
+
+  @keyframes orbFloat {
+    0%, 100% { transform: translateY(0) scale(1); }
+    50% { transform: translateY(-30px) scale(1.05); }
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 900px;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(0,212,255,0.08);
+    border: 1px solid rgba(0,212,255,0.2);
+    border-radius: 100px;
+    padding: 8px 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--cyan);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 32px;
+    animation: fadeInDown 0.8s ease forwards;
+  }
+
+  .hero-badge .dot {
+    width: 6px; height: 6px;
+    background: var(--green);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(1.5); }
+  }
+
+  .hero h1 {
+    font-family: var(--font-head);
+    font-size: clamp(3rem, 7vw, 5.5rem);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -2px;
+    margin-bottom: 24px;
+    animation: fadeInUp 0.8s ease 0.2s both;
+  }
+
+  .hero h1 .line1 { display: block; color: var(--text); }
+  .hero h1 .line2 {
+    display: block;
+    background: linear-gradient(135deg, var(--cyan) 0%, var(--green) 50%, var(--cyan) 100%);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shimmer 3s linear infinite, fadeInUp 0.8s ease 0.3s both;
+  }
+
+  @keyframes shimmer {
+    0% { background-position: 0% center; }
+    100% { background-position: 200% center; }
+  }
+
+  .hero p {
+    font-size: 1.15rem;
+    color: var(--muted);
+    max-width: 600px;
+    margin: 0 auto 40px;
+    line-height: 1.7;
+    animation: fadeInUp 0.8s ease 0.4s both;
+  }
+
+  .hero-cta {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+    animation: fadeInUp 0.8s ease 0.5s both;
+  }
+
+  /* Stats strip */
+  .hero-stats {
+    display: flex;
+    gap: 48px;
+    justify-content: center;
+    margin-top: 72px;
+    padding-top: 48px;
+    border-top: 1px solid var(--border);
+    animation: fadeInUp 0.8s ease 0.7s both;
+  }
+
+  .stat-item { text-align: center; }
+
+  .stat-item .num {
+    font-family: var(--font-head);
+    font-size: 2rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--cyan), var(--green));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .stat-item .label {
+    font-size: 0.8rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 4px;
+  }
+
+  @keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── FEATURES ── */
+  section { padding: 100px 60px; position: relative; z-index: 1; }
+
+  .section-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--cyan);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .section-label::after {
+    content: '';
+    height: 1px;
+    width: 40px;
+    background: var(--cyan);
+    opacity: 0.5;
+  }
+
+  .section-title {
+    font-family: var(--font-head);
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 800;
+    letter-spacing: -1px;
+    line-height: 1.1;
+    margin-bottom: 16px;
+  }
+
+  .section-sub {
+    color: var(--muted);
+    font-size: 1rem;
+    max-width: 500px;
+    line-height: 1.7;
+    margin-bottom: 60px;
+  }
+
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .feature-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 32px;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .feature-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .feature-card:hover {
+    transform: translateY(-6px);
+    border-color: rgba(0,212,255,0.3);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+  }
+
+  .feature-card:hover::before { opacity: 1; }
+
+  .feature-icon {
+    width: 52px; height: 52px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    margin-bottom: 20px;
+  }
+
+  .feature-card h3 {
+    font-family: var(--font-head);
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+
+  .feature-card p {
+    color: var(--muted);
+    font-size: 0.9rem;
+    line-height: 1.7;
+  }
+
+  /* ── HOW IT WORKS ── */
+  .how-section { background: var(--bg2); }
+
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px;
+    max-width: 900px;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  .steps::before {
+    content: '';
+    position: absolute;
+    top: 28px;
+    left: 16%;
+    right: 16%;
+    height: 1px;
+    background: linear-gradient(90deg, var(--cyan), var(--green));
+    opacity: 0.3;
+  }
+
+  .step {
+    text-align: center;
+    padding: 32px 24px;
+  }
+
+  .step-num {
+    width: 56px; height: 56px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--cyan), var(--green));
+    color: #080c12;
+    font-family: var(--font-head);
+    font-size: 1.3rem;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 24px;
+    box-shadow: 0 0 30px rgba(0,212,255,0.3);
+  }
+
+  .step h3 {
+    font-family: var(--font-head);
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+
+  .step p {
+    color: var(--muted);
+    font-size: 0.9rem;
+    line-height: 1.7;
+  }
+
+  /* ── INSIGHT CARD PREVIEW ── */
+  .insight-section {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+
+  .insight-text .section-title { margin-bottom: 20px; }
+
+  .insight-features {
+    list-style: none;
+    margin-top: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .insight-features li {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 0.95rem;
+    color: var(--muted);
+  }
+
+  .insight-features li .check {
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    background: rgba(0,255,136,0.1);
+    border: 1px solid rgba(0,255,136,0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--green);
+    font-size: 0.7rem;
+    flex-shrink: 0;
+  }
+
+  .insight-preview {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 32px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .insight-preview::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(0,212,255,0.03), rgba(0,255,136,0.03));
+  }
+
+  .ip-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  .ip-icon {
+    width: 42px; height: 42px;
+    border-radius: 10px;
+    background: rgba(0,212,255,0.1);
+    border: 1px solid rgba(0,212,255,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--cyan);
+    font-size: 1.1rem;
+  }
+
+  .ip-title { font-weight: 600; font-size: 0.95rem; }
+  .ip-sub { font-size: 0.8rem; color: var(--muted); }
+
+  .ip-message {
+    background: rgba(0,212,255,0.05);
+    border: 1px solid rgba(0,212,255,0.15);
+    border-radius: 12px;
+    padding: 20px;
+    font-size: 0.9rem;
+    line-height: 1.7;
+    color: var(--text);
+    margin-bottom: 24px;
+  }
+
+  .ip-metrics {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .ip-metric {
+    background: var(--card2);
+    border-radius: 10px;
+    padding: 16px;
+    text-align: center;
+  }
+
+  .ip-metric .val {
+    font-family: var(--font-head);
+    font-size: 1.4rem;
+    font-weight: 800;
+    margin-bottom: 4px;
+  }
+
+  .ip-metric .lbl {
+    font-size: 0.75rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  /* ── TRACKING SECTION ── */
+  .tracking-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    max-width: 900px;
+  }
+
+  .track-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 24px;
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    transition: all 0.3s;
+  }
+
+  .track-card:hover {
+    border-color: rgba(0,212,255,0.3);
+    transform: translateX(4px);
+  }
+
+  .track-icon {
+    width: 44px; height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+  }
+
+  .track-card h4 { font-size: 0.95rem; font-weight: 600; margin-bottom: 6px; }
+  .track-card p { font-size: 0.85rem; color: var(--muted); line-height: 1.5; }
+
+  /* ── CTA ── */
+  .cta-section {
+    text-align: center;
+    padding: 120px 60px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cta-section::before {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(0,212,255,0.08) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+
+  .cta-section .section-title {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    max-width: 600px;
+    margin: 0 auto 20px;
+  }
+
+  .cta-section p {
+    color: var(--muted);
+    font-size: 1rem;
+    margin-bottom: 40px;
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 40px 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: var(--muted);
+    font-size: 0.85rem;
+  }
+
+  footer .logo { font-size: 1.2rem; }
+
+  /* ── MINI DASHBOARD PREVIEW ── */
+  .preview-section {
+    background: var(--bg2);
+    padding: 100px 60px;
+  }
+
+  .preview-wrapper {
+    max-width: 1100px;
+    margin: 60px auto 0;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 40px 100px rgba(0,0,0,0.5);
+  }
+
+  .preview-bar {
+    background: var(--bg);
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .preview-dot {
+    width: 12px; height: 12px;
+    border-radius: 50%;
+  }
+
+  .preview-url {
+    flex: 1;
+    background: var(--card2);
+    border-radius: 6px;
+    padding: 6px 16px;
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin: 0 16px;
+  }
+
+  .preview-dash {
+    padding: 32px;
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 24px;
+    min-height: 400px;
+  }
+
+  .preview-sidebar {
+    background: var(--bg);
+    border-radius: 12px;
+    padding: 24px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .ps-logo {
+    font-family: var(--font-head);
+    font-size: 1rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--cyan), var(--green));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 24px;
+    padding: 0 8px;
+  }
+
+  .ps-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    font-size: 0.82rem;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .ps-item.active {
+    background: rgba(0,212,255,0.1);
+    color: var(--cyan);
+    border: 1px solid rgba(0,212,255,0.2);
+  }
+
+  .preview-main { display: flex; flex-direction: column; gap: 20px; }
+
+  .preview-greeting {
+    font-family: var(--font-head);
+    font-size: 1.3rem;
+    font-weight: 700;
+  }
+
+  .preview-greeting span { color: var(--cyan); }
+
+  .preview-cards {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+  }
+
+  .pcard {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+  }
+
+  .pcard .pc-label { font-size: 0.7rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+  .pcard .pc-val { font-family: var(--font-head); font-size: 1.5rem; font-weight: 800; }
+  .pcard .pc-unit { font-size: 0.7rem; color: var(--muted); margin-top: 2px; }
+
+  .preview-insight {
+    background: linear-gradient(135deg, rgba(0,212,255,0.08), rgba(0,255,136,0.05));
+    border: 1px solid rgba(0,212,255,0.2);
+    border-radius: 10px;
+    padding: 16px 20px;
+    font-size: 0.85rem;
+    line-height: 1.6;
+  }
+
+  .preview-insight strong { color: var(--cyan); }
+
+  /* responsive */
+  @media (max-width: 768px) {
+    nav { padding: 16px 24px; }
+    nav ul { display: none; }
+    section { padding: 60px 24px; }
+    .hero { padding: 100px 24px 60px; }
+    .features-grid, .steps, .tracking-grid { grid-template-columns: 1fr; }
+    .insight-section { grid-template-columns: 1fr; }
+    .hero-stats { gap: 24px; flex-wrap: wrap; }
+    footer { flex-direction: column; gap: 16px; text-align: center; }
+    .preview-dash { grid-template-columns: 1fr; }
+    .preview-sidebar { display: none; }
+    .preview-cards { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav>
+  <div class="logo">FitTrack<span>AI</span></div>
+  <ul>
+    <li><a href="#features">Features</a></li>
+    <li><a href="#how">How it Works</a></li>
+    <li><a href="#tracking">Tracking</a></li>
+    <li><a href="#insights">Insights</a></li>
+  </ul>
+  <div class="nav-cta">
+    <a href="login.html" class="btn btn-outline">Log In</a>
+    <a href="register.html" class="btn btn-primary">Get Started <i class="fas fa-arrow-right"></i></a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+  <div class="orb orb3"></div>
+
+  <div class="hero-content">
+    <div class="hero-badge">
+      <span class="dot"></span>
+      AI-Powered Health Intelligence
+    </div>
+
+    <h1>
+      <span class="line1">Track. Predict.</span>
+      <span class="line2">Thrive.</span>
+    </h1>
+
+    <p>FitTrack AI learns your unique health patterns and delivers personalized predictions, friendly insights, and actionable recommendations — so you can perform at your best every single day.</p>
+
+    <div class="hero-cta">
+      <a href="register.html" class="btn btn-green">Start Tracking Free <i class="fas fa-rocket"></i></a>
+      <a href="#how" class="btn btn-outline">See How It Works</a>
+    </div>
+
+    <div class="hero-stats">
+      <div class="stat-item">
+        <div class="num">6</div>
+        <div class="label">Health Domains</div>
+      </div>
+      <div class="stat-item">
+        <div class="num">ML</div>
+        <div class="label">Powered Predictions</div>
+      </div>
+      <div class="stat-item">
+        <div class="num">7</div>
+        <div class="label">Day Trend Analysis</div>
+      </div>
+      <div class="stat-item">
+        <div class="num">100%</div>
+        <div class="label">Personalized</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DASHBOARD PREVIEW -->
+<section class="preview-section">
+  <div style="max-width:1100px;margin:0 auto;">
+    <div class="section-label">Live Preview</div>
+    <div class="section-title">Your health, at a glance</div>
+    <p class="section-sub">A professional dashboard that shows everything that matters — in real time.</p>
+  </div>
+
+  <div class="preview-wrapper">
+    <div class="preview-bar">
+      <div class="preview-dot" style="background:#ff5f57"></div>
+      <div class="preview-dot" style="background:#febc2e"></div>
+      <div class="preview-dot" style="background:#28c840"></div>
+      <div class="preview-url">fittrack.ai/dashboard</div>
+    </div>
+    <div class="preview-dash">
+      <div class="preview-sidebar">
+        <div class="ps-logo">FitTrackAI</div>
+        <div class="ps-item active"><i class="fas fa-th-large"></i> Dashboard</div>
+        <div class="ps-item"><i class="fas fa-dumbbell"></i> Workout</div>
+        <div class="ps-item"><i class="fas fa-utensils"></i> Meals</div>
+        <div class="ps-item"><i class="fas fa-heartbeat"></i> Health</div>
+        <div class="ps-item"><i class="fas fa-brain"></i> Mental</div>
+        <div class="ps-item"><i class="fas fa-robot"></i> Predictions</div>
+        <div class="ps-item"><i class="fas fa-calendar"></i> History</div>
+        <div class="ps-item"><i class="fas fa-user"></i> Profile</div>
+      </div>
+      <div class="preview-main">
+        <div class="preview-greeting">Good morning, <span>Honey</span> 💪</div>
+        <div class="preview-cards">
+          <div class="pcard">
+            <div class="pc-label">Calories</div>
+            <div class="pc-val" style="color:var(--amber)">1,840</div>
+            <div class="pc-unit">kcal today</div>
+          </div>
+          <div class="pcard">
+            <div class="pc-label">Sleep</div>
+            <div class="pc-val" style="color:var(--cyan)">7.5</div>
+            <div class="pc-unit">hours last night</div>
+          </div>
+          <div class="pcard">
+            <div class="pc-label">Steps</div>
+            <div class="pc-val" style="color:var(--green)">6,240</div>
+            <div class="pc-unit">steps today</div>
+          </div>
+          <div class="pcard">
+            <div class="pc-label">Heart Rate</div>
+            <div class="pc-val" style="color:var(--red)">72</div>
+            <div class="pc-unit">bpm resting</div>
+          </div>
+        </div>
+        <div class="preview-insight">
+          <strong>🤖 AI Insight:</strong> You're doing great! Your sleep improved by 1.5 hours compared to yesterday. Your predicted weight tomorrow is <strong style="color:var(--green)">55.1 kg</strong>. Keep this momentum going — you're on track for your goal! 💪
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section id="features">
+  <div style="max-width:1200px;margin:0 auto;">
+    <div class="section-label">Features</div>
+    <div class="section-title">Everything you need to<br>take control of your health</div>
+    <p class="section-sub">Built for real people — from gym athletes to working professionals managing stress and performance.</p>
+
+    <div class="features-grid">
+      <div class="feature-card" style="--accent:var(--cyan)">
+        <div class="feature-icon" style="background:rgba(0,212,255,0.1);color:var(--cyan)">
+          <i class="fas fa-robot"></i>
+        </div>
+        <h3>AI-Powered Predictions</h3>
+        <p>Machine learning models trained on your personal data predict your weight trend, sleep risk, and calorie needs for the next 3 days.</p>
+      </div>
+
+      <div class="feature-card" style="--accent:var(--green)">
+        <div class="feature-icon" style="background:rgba(0,255,136,0.1);color:var(--green)">
+          <i class="fas fa-comment-medical"></i>
+        </div>
+        <h3>Friendly Insight Cards</h3>
+        <p>No cold numbers. FitTrack AI speaks to you like a coach — "You only slept 5 hours. Here's what that means for your day, and how to fix it."</p>
+      </div>
+
+      <div class="feature-card" style="--accent:var(--purple)">
+        <div class="feature-icon" style="background:rgba(168,85,247,0.1);color:var(--purple)">
+          <i class="fas fa-chart-line"></i>
+        </div>
+        <h3>7-Day Trend Analysis</h3>
+        <p>Beautiful interactive charts show how your weight, sleep, mood, and productivity trend over the past week so you can spot patterns.</p>
+      </div>
+
+      <div class="feature-card" style="--accent:var(--amber)">
+        <div class="feature-icon" style="background:rgba(255,184,0,0.1);color:var(--amber)">
+          <i class="fas fa-brain"></i>
+        </div>
+        <h3>Mental Health Tracking</h3>
+        <p>Track mood, stress, energy, and productivity daily. FitTrack AI connects your mental state with your physical performance.</p>
+      </div>
+
+      <div class="feature-card" style="--accent:var(--red)">
+        <div class="feature-icon" style="background:rgba(255,71,87,0.1);color:var(--red)">
+          <i class="fas fa-dumbbell"></i>
+        </div>
+        <h3>Complete Activity Logging</h3>
+        <p>Log workouts, meals, water intake, sleep, steps, and heart rate — all in one place. Simple forms, instant feedback.</p>
+      </div>
+
+      <div class="feature-card" style="--accent:var(--cyan)">
+        <div class="feature-icon" style="background:rgba(0,212,255,0.1);color:var(--cyan)">
+          <i class="fas fa-user-circle"></i>
+        </div>
+        <h3>Fully Personalized</h3>
+        <p>Set your goal — lose weight, gain muscle, reduce stress, boost performance — and FitTrack AI tailors everything to you specifically.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how" class="how-section">
+  <div style="max-width:1200px;margin:0 auto;text-align:center;">
+    <div class="section-label" style="justify-content:center">How It Works</div>
+    <div class="section-title">Three steps to smarter health</div>
+    <p class="section-sub" style="margin:0 auto 60px">No complexity. No guesswork. Just log, get insights, and improve.</p>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <h3>Log Your Day</h3>
+        <p>Takes 2 minutes. Log your workout, meals, sleep, mood, and vitals through simple friendly forms.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <h3>AI Analyzes</h3>
+        <p>Our ML models analyze your patterns across 6 health domains and identify trends unique to you.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <h3>Get Insights</h3>
+        <p>Receive personalized predictions and friendly recommendations that actually help you improve.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TRACKING -->
+<section id="tracking">
+  <div style="max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start;">
+    <div>
+      <div class="section-label">What We Track</div>
+      <div class="section-title">6 health domains,<br>one platform</div>
+      <p class="section-sub">From your morning run to your bedtime mood — FitTrack AI captures everything that shapes your performance.</p>
+      <a href="register.html" class="btn btn-primary">Start Tracking <i class="fas fa-arrow-right"></i></a>
+    </div>
+    <div class="tracking-grid">
+      <div class="track-card">
+        <div class="track-icon" style="background:rgba(0,212,255,0.1);color:var(--cyan)"><i class="fas fa-dumbbell"></i></div>
+        <div>
+          <h4>Physical Activity</h4>
+          <p>Workout type, duration, intensity, calories burned, steps</p>
+        </div>
+      </div>
+      <div class="track-card">
+        <div class="track-icon" style="background:rgba(255,184,0,0.1);color:var(--amber)"><i class="fas fa-utensils"></i></div>
+        <div>
+          <h4>Diet & Nutrition</h4>
+          <p>Meals, calories, water intake, meal timing</p>
+        </div>
+      </div>
+      <div class="track-card">
+        <div class="track-icon" style="background:rgba(168,85,247,0.1);color:var(--purple)"><i class="fas fa-moon"></i></div>
+        <div>
+          <h4>Sleep</h4>
+          <p>Sleep hours, quality rating, sleep patterns</p>
+        </div>
+      </div>
+      <div class="track-card">
+        <div class="track-icon" style="background:rgba(255,71,87,0.1);color:var(--red)"><i class="fas fa-heartbeat"></i></div>
+        <div>
+          <h4>Health Vitals</h4>
+          <p>Weight, heart rate, BMI, blood pressure</p>
+        </div>
+      </div>
+      <div class="track-card">
+        <div class="track-icon" style="background:rgba(0,255,136,0.1);color:var(--green)"><i class="fas fa-brain"></i></div>
+        <div>
+          <h4>Mental Health</h4>
+          <p>Mood, stress, energy levels, mindfulness</p>
+        </div>
+      </div>
+      <div class="track-card">
+        <div class="track-icon" style="background:rgba(0,212,255,0.1);color:var(--cyan)"><i class="fas fa-briefcase"></i></div>
+        <div>
+          <h4>Work Performance</h4>
+          <p>Productivity score, focus, work hours</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- INSIGHTS -->
+<section id="insights" class="how-section">
+  <div class="insight-section">
+    <div class="insight-text">
+      <div class="section-label">AI Insights</div>
+      <div class="section-title">Your personal health<br>coach, powered by ML</div>
+      <p class="section-sub">FitTrack AI doesn't just show you numbers. It tells you what they mean — and what to do about them.</p>
+      <ul class="insight-features">
+        <li><span class="check"><i class="fas fa-check"></i></span> Predicts your weight trend for the next 3 days</li>
+        <li><span class="check"><i class="fas fa-check"></i></span> Detects sleep risk before it affects your day</li>
+        <li><span class="check"><i class="fas fa-check"></i></span> Connects your sleep to work performance</li>
+        <li><span class="check"><i class="fas fa-check"></i></span> Recommends workouts based on your recovery</li>
+        <li><span class="check"><i class="fas fa-check"></i></span> Alerts you when mental health needs attention</li>
+      </ul>
+    </div>
+    <div class="insight-preview">
+      <div class="ip-header">
+        <div class="ip-icon"><i class="fas fa-robot"></i></div>
+        <div>
+          <div class="ip-title">FitTrack AI Insight</div>
+          <div class="ip-sub">Sunday, April 5, 2026</div>
+        </div>
+      </div>
+      <div class="ip-message">
+        ⚠️ You only slept <strong>5 hours</strong> last night and your stress level is high. Based on your patterns, your focus and energy will likely be lower today.<br><br>
+        Here's your personalized plan: skip the heavy workout today, take a 20-minute walk instead, and aim to sleep by <strong>10 PM tonight</strong>. If this continues, you may see a <strong>0.3 kg increase</strong> by Friday.
+      </div>
+      <div class="ip-metrics">
+        <div class="ip-metric">
+          <div class="val" style="color:var(--cyan)">55.1 kg</div>
+          <div class="lbl">Predicted Weight</div>
+        </div>
+        <div class="ip-metric">
+          <div class="val" style="color:var(--amber)">⚠️ Risk</div>
+          <div class="lbl">Sleep Status</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div style="position:relative;z-index:1;">
+    <div class="section-label" style="justify-content:center">Get Started Today</div>
+    <div class="section-title">Your healthiest self<br>starts here.</div>
+    <p>Join FitTrack AI and start getting personalized insights that actually move the needle.</p>
+    <a href="register.html" class="btn btn-green">Create Your Account Free <i class="fas fa-arrow-right"></i></a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="logo">FitTrack<span style="-webkit-text-fill-color:var(--muted)">AI</span></div>
+  <div>Built with 💙 by Sree Kirthana — JBIET, Hyderabad</div>
+  <div>© 2026 FitTrack AI. All rights reserved.</div>
+</footer>
+
+<script>
+  // Smooth scroll for nav links
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      document.querySelector(a.getAttribute('href'))?.scrollIntoView({ behavior: 'smooth' });
+    });
+  });
+
+  // Intersection observer for fade-in animations
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.style.opacity = '1';
+        entry.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.feature-card, .step, .track-card').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(30px)';
+    el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+    observer.observe(el);
+  });
+</script>
+</body>
+</html>
