@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FitTrack AI — Create Your Account</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+  :root {
+    --bg: #080c12;
+    --bg2: #0d1117;
+    --card: #111827;
+    --card2: #1a2235;
+    --border: rgba(0,212,255,0.12);
+    --border-hover: rgba(0,212,255,0.35);
+    --cyan: #00d4ff;
+    --green: #00ff88;
+    --amber: #ffb800;
+    --red: #ff4757;
+    --purple: #a855f7;
+    --text: #f0f6fc;
+    --muted: #8b949e;
+    --font-head: 'Syne', sans-serif;
+    --font-body: 'Space Grotesk', sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  /* ── LEFT PANEL ── */
+  .left-panel {
+    background: var(--bg2);
+    border-right: 1px solid var(--border);
+    padding: 48px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .left-panel::before {
+    content: '';
+    position: absolute;
+    top: -100px; left: -100px;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(0,212,255,0.08) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+
+  .left-panel::after {
+    content: '';
+    position: absolute;
+    bottom: -100px; right: -100px;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(0,255,136,0.06) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+
+  .logo {
+    font-family: var(--font-head);
+    font-size: 1.5rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--cyan), var(--green));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-decoration: none;
+    position: relative;
+    z-index: 1;
+  }
+
+  .left-content {
+    position: relative;
+    z-index: 1;
+  }
+
+  .left-content h2 {
+    font-family: var(--font-head);
+    font-size: 2.5rem;
+    font-weight: 800;
+    line-height: 1.15;
+    letter-spacing: -1px;
+    margin-bottom: 20px;
+  }
+
+  .left-content h2 span {
+    background: linear-gradient(135deg, var(--cyan), var(--green));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .left-content p {
+    color: var(--muted);
+    font-size: 1rem;
+    line-height: 1.7;
+    margin-bottom: 40px;
+  }
+
+  .perks {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .perk {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px 20px;
+    background: rgba(0,212,255,0.04);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    transition: all 0.3s;
+  }
+
+  .perk:hover {
+    border-color: var(--border-hover);
+    background: rgba(0,212,255,0.07);
+  }
+
+  .perk-icon {
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    flex-shrink: 0;
+  }
+
+  .perk-text h4 { font-size: 0.9rem; font-weight: 600; margin-bottom: 3px; }
+  .perk-text p { font-size: 0.8rem; color: var(--muted); }
+
+  .left-footer {
+    font-size: 0.8rem;
+    color: var(--muted);
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ── RIGHT PANEL ── */
+  .right-panel {
+    padding: 48px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow-y: auto;
+  }
+
+  .form-header {
+    margin-bottom: 36px;
+  }
+
+  .form-header h1 {
+    font-family: var(--font-head);
+    font-size: 1.8rem;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    margin-bottom: 8px;
+  }
+
+  .form-header p {
+    color: var(--muted);
+    font-size: 0.9rem;
+  }
+
+  .form-header p a {
+    color: var(--cyan);
+    text-decoration: none;
+    font-weight: 600;
+  }
+
+  .form-header p a:hover { text-decoration: underline; }
+
+  /* Progress steps */
+  .progress-steps {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    margin-bottom: 36px;
+  }
+
+  .step-pill {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+  }
+
+  .step-circle {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    font-weight: 700;
+    border: 2px solid var(--border);
+    color: var(--muted);
+    transition: all 0.3s;
+    flex-shrink: 0;
+  }
+
+  .step-circle.active {
+    border-color: var(--cyan);
+    color: var(--cyan);
+    background: rgba(0,212,255,0.1);
+  }
+
+  .step-circle.done {
+    border-color: var(--green);
+    background: var(--green);
+    color: #080c12;
+  }
+
+  .step-label {
+    font-size: 0.75rem;
+    color: var(--muted);
+    font-weight: 500;
+  }
+
+  .step-label.active { color: var(--cyan); }
+
+  .step-line {
+    height: 1px;
+    flex: 1;
+    background: var(--border);
+    margin: 0 8px;
+  }
+
+  .step-line.done { background: var(--green); }
+
+  /* Form */
+  form { display: flex; flex-direction: column; gap: 0; }
+
+  .form-step { display: none; flex-direction: column; gap: 18px; }
+  .form-step.active { display: flex; }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  .form-group { display: flex; flex-direction: column; gap: 8px; }
+
+  .form-group label {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .form-group label span { color: var(--red); }
+
+  .form-group input,
+  .form-group select {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 13px 16px;
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    transition: all 0.3s;
+    outline: none;
+    width: 100%;
+  }
+
+  .form-group input:focus,
+  .form-group select:focus {
+    border-color: var(--cyan);
+    box-shadow: 0 0 0 3px rgba(0,212,255,0.08);
+    background: var(--card2);
+  }
+
+  .form-group input::placeholder { color: var(--muted); opacity: 0.6; }
+
+  .form-group select option {
+    background: var(--card2);
+    color: var(--text);
+  }
+
+  .input-hint {
+    font-size: 0.75rem;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+
+  /* Goal selector */
+  .goal-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .goal-option {
+    position: relative;
+  }
+
+  .goal-option input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+  }
+
+  .goal-option label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 20px 16px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-align: center;
+    text-transform: none;
+    letter-spacing: 0;
+    color: var(--muted);
+    font-size: 0.85rem;
+    font-weight: 500;
+  }
+
+  .goal-option label .goal-icon {
+    font-size: 1.5rem;
+    margin-bottom: 4px;
+  }
+
+  .goal-option label .goal-name {
+    font-weight: 600;
+    color: var(--text);
+    font-size: 0.85rem;
+  }
+
+  .goal-option label .goal-desc {
+    font-size: 0.75rem;
+    color: var(--muted);
+  }
+
+  .goal-option input:checked + label {
+    border-color: var(--cyan);
+    background: rgba(0,212,255,0.08);
+    color: var(--cyan);
+  }
+
+  .goal-option input:checked + label .goal-name { color: var(--cyan); }
+
+  .goal-option label:hover {
+    border-color: var(--border-hover);
+    background: rgba(0,212,255,0.04);
+  }
+
+  /* Buttons */
+  .form-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 8px;
+  }
+
+  .btn {
+    padding: 13px 28px;
+    border-radius: 10px;
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, var(--cyan), #0099cc);
+    color: #080c12;
+    flex: 1;
+    justify-content: center;
+    box-shadow: 0 0 20px rgba(0,212,255,0.2);
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 30px rgba(0,212,255,0.4);
+  }
+
+  .btn-green {
+    background: linear-gradient(135deg, var(--green), #00cc6a);
+    color: #080c12;
+    flex: 1;
+    justify-content: center;
+    box-shadow: 0 0 20px rgba(0,255,136,0.2);
+  }
+
+  .btn-green:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 30px rgba(0,255,136,0.4);
+  }
+
+  .btn-outline {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+  }
+
+  .btn-outline:hover {
+    border-color: var(--border-hover);
+    color: var(--text);
+  }
+
+  /* Success screen */
+  .success-screen {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 20px;
+    padding: 40px 0;
+  }
+
+  .success-icon {
+    width: 80px; height: 80px;
+    border-radius: 50%;
+    background: rgba(0,255,136,0.1);
+    border: 2px solid var(--green);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    color: var(--green);
+    animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+
+  @keyframes popIn {
+    0% { transform: scale(0); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+  }
+
+  .success-screen h2 {
+    font-family: var(--font-head);
+    font-size: 1.8rem;
+    font-weight: 800;
+  }
+
+  .success-screen p { color: var(--muted); font-size: 0.95rem; line-height: 1.6; }
+
+  /* Error message */
+  .error-msg {
+    display: none;
+    background: rgba(255,71,87,0.08);
+    border: 1px solid rgba(255,71,87,0.3);
+    border-radius: 10px;
+    padding: 12px 16px;
+    font-size: 0.85rem;
+    color: var(--red);
+    align-items: center;
+    gap: 8px;
+  }
+
+  .error-msg.show { display: flex; }
+
+  /* Loading spinner */
+  .spinner {
+    width: 16px; height: 16px;
+    border: 2px solid rgba(8,12,18,0.3);
+    border-top-color: #080c12;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    display: none;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Section title inside form */
+  .step-title {
+    font-family: var(--font-head);
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 4px;
+    color: var(--text);
+  }
+
+  .step-desc {
+    font-size: 0.82rem;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+
+  /* responsive */
+  @media (max-width: 900px) {
+    body { grid-template-columns: 1fr; }
+    .left-panel { display: none; }
+    .right-panel { padding: 32px 24px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- LEFT PANEL -->
+<div class="left-panel">
+  <a href="index.html" class="logo">FitTrackAI</a>
+
+  <div class="left-content">
+    <h2>Your health journey<br>starts <span>right here.</span></h2>
+    <p>Join FitTrack AI and get personalized predictions, friendly insights, and actionable recommendations based on YOUR unique health patterns.</p>
+
+    <div class="perks">
+      <div class="perk">
+        <div class="perk-icon" style="background:rgba(0,212,255,0.1);color:var(--cyan)">
+          <i class="fas fa-robot"></i>
+        </div>
+        <div class="perk-text">
+          <h4>AI Predictions</h4>
+          <p>ML model predicts your weight trend and sleep risk</p>
+        </div>
+      </div>
+      <div class="perk">
+        <div class="perk-icon" style="background:rgba(0,255,136,0.1);color:var(--green)">
+          <i class="fas fa-comment-medical"></i>
+        </div>
+        <div class="perk-text">
+          <h4>Friendly Insights</h4>
+          <p>Personal health coach that talks to you, not at you</p>
+        </div>
+      </div>
+      <div class="perk">
+        <div class="perk-icon" style="background:rgba(168,85,247,0.1);color:var(--purple)">
+          <i class="fas fa-chart-line"></i>
+        </div>
+        <div class="perk-text">
+          <h4>7-Day Trend Analysis</h4>
+          <p>Beautiful charts showing your health patterns</p>
+        </div>
+      </div>
+      <div class="perk">
+        <div class="perk-icon" style="background:rgba(255,184,0,0.1);color:var(--amber)">
+          <i class="fas fa-brain"></i>
+        </div>
+        <div class="perk-text">
+          <h4>Mental + Physical</h4>
+          <p>Tracks mood, stress, productivity alongside fitness</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="left-footer">
+    © 2026 FitTrack AI · Built by Sree Kirthana · JBIET, Hyderabad
+  </div>
+</div>
+
+<!-- RIGHT PANEL -->
+<div class="right-panel">
+  <div class="form-header">
+    <h1>Create your account</h1>
+    <p>Already have an account? <a href="login.html">Sign in here</a></p>
+  </div>
+
+  <!-- Progress Steps -->
+  <div class="progress-steps" id="progressSteps">
+    <div class="step-pill">
+      <div class="step-circle active" id="sc1">1</div>
+      <span class="step-label active" id="sl1">Personal</span>
+    </div>
+    <div class="step-line" id="line1"></div>
+    <div class="step-pill">
+      <div class="step-circle" id="sc2">2</div>
+      <span class="step-label" id="sl2">Body Stats</span>
+    </div>
+    <div class="step-line" id="line2"></div>
+    <div class="step-pill">
+      <div class="step-circle" id="sc3">3</div>
+      <span class="step-label" id="sl3">Your Goal</span>
+    </div>
+  </div>
+
+  <!-- Error Message -->
+  <div class="error-msg" id="errorMsg">
+    <i class="fas fa-exclamation-circle"></i>
+    <span id="errorText">Something went wrong. Please try again.</span>
+  </div>
+
+  <form id="registerForm">
+
+    <!-- STEP 1: Personal Info -->
+    <div class="form-step active" id="step1">
+      <div>
+        <div class="step-title">Personal Information</div>
+        <div class="step-desc">Tell us a little about yourself</div>
+      </div>
+
+      <div class="form-group">
+        <label>Full Name <span>*</span></label>
+        <input type="text" id="name" placeholder="e.g. Sree Kirthana" required>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Email Address <span>*</span></label>
+          <input type="email" id="email" placeholder="you@example.com" required>
+        </div>
+        <div class="form-group">
+          <label>Contact Number <span>*</span></label>
+          <input type="tel" id="contact" placeholder="9999999999" required>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Age <span>*</span></label>
+          <input type="number" id="age" placeholder="e.g. 19" min="10" max="100" required>
+        </div>
+        <div class="form-group">
+          <label>Gender <span>*</span></label>
+          <select id="gender" required>
+            <option value="" disabled selected>Select gender</option>
+            <option value="Female">Female</option>
+            <option value="Male">Male</option>
+            <option value="Other">Other</option>
+            <option value="Prefer not to say">Prefer not to say</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="btn btn-primary" onclick="nextStep(1)">
+          Continue <i class="fas fa-arrow-right"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- STEP 2: Body Stats -->
+    <div class="form-step" id="step2">
+      <div>
+        <div class="step-title">Body Statistics</div>
+        <div class="step-desc">Used to calculate your BMI and personalize predictions</div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Weight <span>*</span></label>
+          <input type="number" id="weight" placeholder="e.g. 55" step="0.1" min="20" max="300" required>
+          <span class="input-hint">in kilograms (kg)</span>
+        </div>
+        <div class="form-group">
+          <label>Height <span>*</span></label>
+          <input type="number" id="height" placeholder="e.g. 160" step="0.1" min="100" max="250" required>
+          <span class="input-hint">in centimeters (cm)</span>
+        </div>
+      </div>
+
+      <!-- BMI Preview -->
+      <div id="bmiPreview" style="display:none; background:var(--card); border:1px solid var(--border); border-radius:12px; padding:16px; display:flex; align-items:center; gap:16px;">
+        <div style="text-align:center;">
+          <div style="font-family:var(--font-head);font-size:2rem;font-weight:800;" id="bmiValue">—</div>
+          <div style="font-size:0.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;">BMI</div>
+        </div>
+        <div>
+          <div style="font-weight:600;font-size:0.9rem;" id="bmiCategory">—</div>
+          <div style="font-size:0.8rem;color:var(--muted);">Based on your height and weight</div>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="btn btn-outline" onclick="prevStep(2)">
+          <i class="fas fa-arrow-left"></i> Back
+        </button>
+        <button type="button" class="btn btn-primary" onclick="nextStep(2)">
+          Continue <i class="fas fa-arrow-right"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- STEP 3: Goal -->
+    <div class="form-step" id="step3">
+      <div>
+        <div class="step-title">What's your primary goal?</div>
+        <div class="step-desc">FitTrack AI will personalize everything based on this</div>
+      </div>
+
+      <div class="goal-grid">
+        <div class="goal-option">
+          <input type="radio" name="goal" id="g1" value="lose weight">
+          <label for="g1">
+            <span class="goal-icon">🔥</span>
+            <span class="goal-name">Lose Weight</span>
+            <span class="goal-desc">Burn fat, track calories</span>
+          </label>
+        </div>
+        <div class="goal-option">
+          <input type="radio" name="goal" id="g2" value="gain muscle">
+          <label for="g2">
+            <span class="goal-icon">💪</span>
+            <span class="goal-name">Gain Muscle</span>
+            <span class="goal-desc">Build strength and mass</span>
+          </label>
+        </div>
+        <div class="goal-option">
+          <input type="radio" name="goal" id="g3" value="improve fitness">
+          <label for="g3">
+            <span class="goal-icon">🏃</span>
+            <span class="goal-name">Improve Fitness</span>
+            <span class="goal-desc">Cardio, endurance, stamina</span>
+          </label>
+        </div>
+        <div class="goal-option">
+          <input type="radio" name="goal" id="g4" value="reduce stress">
+          <label for="g4">
+            <span class="goal-icon">🧘</span>
+            <span class="goal-name">Reduce Stress</span>
+            <span class="goal-desc">Mental health & recovery</span>
+          </label>
+        </div>
+        <div class="goal-option">
+          <input type="radio" name="goal" id="g5" value="boost performance">
+          <label for="g5">
+            <span class="goal-icon">⚡</span>
+            <span class="goal-name">Boost Performance</span>
+            <span class="goal-desc">Work & productivity focus</span>
+          </label>
+        </div>
+        <div class="goal-option">
+          <input type="radio" name="goal" id="g6" value="stay healthy">
+          <label for="g6">
+            <span class="goal-icon">❤️</span>
+            <span class="goal-name">Stay Healthy</span>
+            <span class="goal-desc">General wellbeing tracking</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="btn btn-outline" onclick="prevStep(3)">
+          <i class="fas fa-arrow-left"></i> Back
+        </button>
+        <button type="submit" class="btn btn-green" id="submitBtn">
+          <span class="spinner" id="spinner"></span>
+          <span id="submitText">Create Account <i class="fas fa-rocket"></i></span>
+        </button>
+      </div>
+    </div>
+
+  </form>
+
+  <!-- SUCCESS SCREEN -->
+  <div class="success-screen" id="successScreen">
+    <div class="success-icon"><i class="fas fa-check"></i></div>
+    <h2>Welcome to FitTrack AI! 🎉</h2>
+    <p>Your account has been created successfully.<br>Let's start tracking your health journey!</p>
+    <a href="dashboard.html" class="btn btn-green" style="margin-top:8px;">
+      Go to Dashboard <i class="fas fa-arrow-right"></i>
+    </a>
+  </div>
+
+</div>
+
+<script>
+  let currentStep = 1;
+
+  function nextStep(from) {
+    if (!validateStep(from)) return;
+    
+    // Mark current as done
+    document.getElementById('sc' + from).classList.remove('active');
+    document.getElementById('sc' + from).classList.add('done');
+    document.getElementById('sc' + from).innerHTML = '<i class="fas fa-check" style="font-size:0.75rem"></i>';
+    document.getElementById('sl' + from).classList.remove('active');
+
+    if (from < 3) {
+      document.getElementById('line' + from).classList.add('done');
+    }
+
+    // Activate next
+    currentStep = from + 1;
+    document.getElementById('sc' + currentStep).classList.add('active');
+    document.getElementById('sl' + currentStep).classList.add('active');
+
+    document.getElementById('step' + from).classList.remove('active');
+    document.getElementById('step' + currentStep).classList.add('active');
+
+    hideError();
+  }
+
+  function prevStep(from) {
+    document.getElementById('step' + from).classList.remove('active');
+    
+    const prev = from - 1;
+    document.getElementById('sc' + from).classList.remove('active');
+    document.getElementById('sl' + from).classList.remove('active');
+
+    document.getElementById('sc' + prev).classList.remove('done');
+    document.getElementById('sc' + prev).classList.add('active');
+    document.getElementById('sc' + prev).innerHTML = prev;
+    document.getElementById('sl' + prev).classList.add('active');
+
+    if (prev < 3) {
+      document.getElementById('line' + prev).classList.remove('done');
+    }
+
+    document.getElementById('step' + prev).classList.add('active');
+    currentStep = prev;
+    hideError();
+  }
+
+  function validateStep(step) {
+    hideError();
+    if (step === 1) {
+      const name = document.getElementById('name').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const contact = document.getElementById('contact').value.trim();
+      const age = document.getElementById('age').value;
+      const gender = document.getElementById('gender').value;
+
+      if (!name) return showError('Please enter your full name.');
+      if (!email || !email.includes('@')) return showError('Please enter a valid email address.');
+      if (!contact || contact.length < 10) return showError('Please enter a valid contact number.');
+      if (!age || age < 10 || age > 100) return showError('Please enter a valid age.');
+      if (!gender) return showError('Please select your gender.');
+    }
+
+    if (step === 2) {
+      const weight = document.getElementById('weight').value;
+      const height = document.getElementById('height').value;
+      if (!weight || weight < 20) return showError('Please enter a valid weight in kg.');
+      if (!height || height < 100) return showError('Please enter a valid height in cm.');
+    }
+
+    return true;
+  }
+
+  function showError(msg) {
+    document.getElementById('errorText').textContent = msg;
+    document.getElementById('errorMsg').classList.add('show');
+    return false;
+  }
+
+  function hideError() {
+    document.getElementById('errorMsg').classList.remove('show');
+  }
+
+  // BMI Calculator
+  function calcBMI() {
+    const w = parseFloat(document.getElementById('weight').value);
+    const h = parseFloat(document.getElementById('height').value) / 100;
+    if (w && h) {
+      const bmi = (w / (h * h)).toFixed(1);
+      let cat = '', color = '';
+      if (bmi < 18.5) { cat = 'Underweight'; color = 'var(--cyan)'; }
+      else if (bmi < 25) { cat = 'Normal weight ✅'; color = 'var(--green)'; }
+      else if (bmi < 30) { cat = 'Overweight'; color = 'var(--amber)'; }
+      else { cat = 'Obese'; color = 'var(--red)'; }
+
+      document.getElementById('bmiValue').textContent = bmi;
+      document.getElementById('bmiValue').style.color = color;
+      document.getElementById('bmiCategory').textContent = cat;
+      document.getElementById('bmiCategory').style.color = color;
+      document.getElementById('bmiPreview').style.display = 'flex';
+    }
+  }
+
+  document.getElementById('weight').addEventListener('input', calcBMI);
+  document.getElementById('height').addEventListener('input', calcBMI);
+
+  // Form Submit
+  document.getElementById('registerForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    hideError();
+
+    const goal = document.querySelector('input[name="goal"]:checked');
+    if (!goal) return showError('Please select your health goal.');
+
+    const submitBtn = document.getElementById('submitBtn');
+    const spinner = document.getElementById('spinner');
+    const submitText = document.getElementById('submitText');
+
+    submitBtn.disabled = true;
+    spinner.style.display = 'block';
+    submitText.style.display = 'none';
+
+    const userData = {
+      name: document.getElementById('name').value.trim(),
+      email: document.getElementById('email').value.trim(),
+      contact: document.getElementById('contact').value.trim(),
+      age: parseInt(document.getElementById('age').value),
+      gender: document.getElementById('gender').value,
+      weight: parseFloat(document.getElementById('weight').value),
+      height: parseFloat(document.getElementById('height').value),
+      goal: goal.value
+    };
+
+    try {
+      const res = await fetch('http://127.0.0.1:5000/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(userData)
+      });
+
+      const data = await res.json();
+
+      if (data.message) {
+        // Save user_id to localStorage for session
+        if (data.user_id) {
+          localStorage.setItem('user_id', data.user_id);
+          localStorage.setItem('user_name', userData.name);
+        }
+        // Show success
+        document.getElementById('registerForm').style.display = 'none';
+        document.getElementById('progressSteps').style.display = 'none';
+        document.getElementById('successScreen').style.display = 'flex';
+      } else {
+        showError(data.error || 'Registration failed. Please try again.');
+        submitBtn.disabled = false;
+        spinner.style.display = 'none';
+        submitText.style.display = 'inline';
+      }
+    } catch (err) {
+      showError('Cannot connect to server. Make sure Flask is running on port 5000.');
+      submitBtn.disabled = false;
+      spinner.style.display = 'none';
+      submitText.style.display = 'inline';
+    }
+  });
+</script>
+</body>
+</html>
