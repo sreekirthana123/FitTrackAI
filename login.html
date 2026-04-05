@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FitTrack AI — Sign In</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+  :root {
+    --bg: #080c12;
+    --bg2: #0d1117;
+    --card: #111827;
+    --card2: #1a2235;
+    --border: rgba(0,212,255,0.12);
+    --border-hover: rgba(0,212,255,0.35);
+    --cyan: #00d4ff;
+    --green: #00ff88;
+    --amber: #ffb800;
+    --red: #ff4757;
+    --purple: #a855f7;
+    --text: #f0f6fc;
+    --muted: #8b949e;
+    --font-head: 'Syne', sans-serif;
+    --font-body: 'Space Grotesk', sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  /* ── LEFT PANEL ── */
+  .left-panel {
+    background: var(--bg2);
+    border-right: 1px solid var(--border);
+    padding: 48px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .left-panel::before {
+    content: '';
+    position: absolute;
+    top: -100px; left: -100px;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(0,255,136,0.08) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+
+  .left-panel::after {
+    content: '';
+    position: absolute;
+    bottom: -100px; right: -100px;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(0,212,255,0.06) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+
+  .logo {
+    font-family: var(--font-head);
+    font-size: 1.5rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--cyan), var(--green));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-decoration: none;
+    position: relative;
+    z-index: 1;
+  }
+
+  .left-content {
+    position: relative;
+    z-index: 1;
+  }
+
+  .left-content h2 {
+    font-family: var(--font-head);
+    font-size: 2.5rem;
+    font-weight: 800;
+    line-height: 1.15;
+    letter-spacing: -1px;
+    margin-bottom: 20px;
+  }
+
+  .left-content h2 span {
+    background: linear-gradient(135deg, var(--cyan), var(--green));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .left-content p {
+    color: var(--muted);
+    font-size: 1rem;
+    line-height: 1.7;
+    margin-bottom: 40px;
+  }
+
+  /* Insight card preview */
+  .insight-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .insight-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--cyan), var(--green));
+  }
+
+  .ic-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+
+  .ic-avatar {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--cyan), var(--green));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    color: #080c12;
+    font-weight: 700;
+  }
+
+  .ic-name { font-weight: 600; font-size: 0.9rem; }
+  .ic-time { font-size: 0.75rem; color: var(--muted); }
+
+  .ic-message {
+    font-size: 0.88rem;
+    line-height: 1.7;
+    color: var(--text);
+    margin-bottom: 20px;
+  }
+
+  .ic-metrics {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+
+  .ic-metric {
+    background: var(--card2);
+    border-radius: 8px;
+    padding: 10px;
+    text-align: center;
+  }
+
+  .ic-metric .val {
+    font-family: var(--font-head);
+    font-size: 1.1rem;
+    font-weight: 800;
+    margin-bottom: 2px;
+  }
+
+  .ic-metric .lbl {
+    font-size: 0.7rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+  }
+
+  /* Floating stats */
+  .floating-stats {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+  }
+
+  .fstat {
+    flex: 1;
+    background: var(--card2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px;
+    text-align: center;
+  }
+
+  .fstat .fval {
+    font-family: var(--font-head);
+    font-size: 1.2rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--cyan), var(--green));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .fstat .flbl { font-size: 0.7rem; color: var(--muted); margin-top: 2px; }
+
+  .left-footer {
+    font-size: 0.8rem;
+    color: var(--muted);
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ── RIGHT PANEL ── */
+  .right-panel {
+    padding: 48px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .form-header {
+    margin-bottom: 40px;
+  }
+
+  .welcome-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(0,255,136,0.08);
+    border: 1px solid rgba(0,255,136,0.2);
+    border-radius: 100px;
+    padding: 6px 16px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--green);
+    letter-spacing: 0.5px;
+    margin-bottom: 20px;
+  }
+
+  .form-header h1 {
+    font-family: var(--font-head);
+    font-size: 2rem;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    margin-bottom: 10px;
+  }
+
+  .form-header p {
+    color: var(--muted);
+    font-size: 0.9rem;
+    line-height: 1.6;
+  }
+
+  .form-header p a {
+    color: var(--cyan);
+    text-decoration: none;
+    font-weight: 600;
+  }
+
+  .form-header p a:hover { text-decoration: underline; }
+
+  /* Form */
+  .login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .form-group { display: flex; flex-direction: column; gap: 8px; }
+
+  .form-group label {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .input-wrapper {
+    position: relative;
+  }
+
+  .input-icon {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--muted);
+    font-size: 0.9rem;
+    pointer-events: none;
+  }
+
+  .input-wrapper input {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 13px 16px 13px 44px;
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    transition: all 0.3s;
+    outline: none;
+    width: 100%;
+  }
+
+  .input-wrapper input:focus {
+    border-color: var(--cyan);
+    box-shadow: 0 0 0 3px rgba(0,212,255,0.08);
+    background: var(--card2);
+  }
+
+  .input-wrapper input::placeholder { color: var(--muted); opacity: 0.6; }
+
+  .toggle-password {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--muted);
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: color 0.3s;
+  }
+
+  .toggle-password:hover { color: var(--cyan); }
+
+  /* Remember me */
+  .form-options {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .remember-me {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+
+  .remember-me input[type="checkbox"] {
+    width: 16px; height: 16px;
+    accent-color: var(--cyan);
+    cursor: pointer;
+  }
+
+  .forgot-link {
+    font-size: 0.85rem;
+    color: var(--cyan);
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  .forgot-link:hover { text-decoration: underline; }
+
+  /* Buttons */
+  .btn {
+    padding: 13px 28px;
+    border-radius: 10px;
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    text-decoration: none;
+    width: 100%;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, var(--cyan), #0099cc);
+    color: #080c12;
+    box-shadow: 0 0 20px rgba(0,212,255,0.2);
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 30px rgba(0,212,255,0.4);
+  }
+
+  .btn-primary:disabled {
+    opacity: 0.6;
+    transform: none;
+    cursor: not-allowed;
+  }
+
+  /* Divider */
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    color: var(--muted);
+    font-size: 0.8rem;
+  }
+
+  .divider::before, .divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* Quick login */
+  .quick-login {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .ql-info { font-size: 0.85rem; color: var(--muted); }
+  .ql-info strong { color: var(--text); display: block; font-size: 0.9rem; margin-bottom: 2px; }
+
+  .ql-btn {
+    background: rgba(0,212,255,0.1);
+    border: 1px solid rgba(0,212,255,0.2);
+    border-radius: 8px;
+    padding: 8px 16px;
+    color: var(--cyan);
+    font-family: var(--font-body);
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    white-space: nowrap;
+  }
+
+  .ql-btn:hover {
+    background: rgba(0,212,255,0.15);
+    border-color: rgba(0,212,255,0.4);
+  }
+
+  /* Error */
+  .error-msg {
+    display: none;
+    background: rgba(255,71,87,0.08);
+    border: 1px solid rgba(255,71,87,0.3);
+    border-radius: 10px;
+    padding: 12px 16px;
+    font-size: 0.85rem;
+    color: var(--red);
+    align-items: center;
+    gap: 8px;
+  }
+
+  .error-msg.show { display: flex; }
+
+  /* Spinner */
+  .spinner {
+    width: 16px; height: 16px;
+    border: 2px solid rgba(8,12,18,0.3);
+    border-top-color: #080c12;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    display: none;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Register link */
+  .register-link {
+    text-align: center;
+    font-size: 0.88rem;
+    color: var(--muted);
+    margin-top: 8px;
+  }
+
+  .register-link a {
+    color: var(--cyan);
+    text-decoration: none;
+    font-weight: 600;
+  }
+
+  .register-link a:hover { text-decoration: underline; }
+
+  /* responsive */
+  @media (max-width: 900px) {
+    body { grid-template-columns: 1fr; }
+    .left-panel { display: none; }
+    .right-panel { padding: 32px 24px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- LEFT PANEL -->
+<div class="left-panel">
+  <a href="index.html" class="logo">FitTrackAI</a>
+
+  <div class="left-content">
+    <h2>Welcome<br>back to your<br><span>health hub.</span></h2>
+    <p>Your health data, predictions, and insights are waiting for you. Let's pick up right where you left off.</p>
+
+    <!-- Insight Card Preview -->
+    <div class="insight-card">
+      <div class="ic-header">
+        <div class="ic-avatar">H</div>
+        <div>
+          <div class="ic-name">Honey's Insight</div>
+          <div class="ic-time">Today, 9:00 AM</div>
+        </div>
+      </div>
+      <div class="ic-message">
+        ✅ Great sleep last night! Your predicted weight tomorrow is <strong style="color:var(--green)">55.1 kg</strong>. Your productivity score is trending upward — keep this routine going! 💪
+      </div>
+      <div class="ic-metrics">
+        <div class="ic-metric">
+          <div class="val" style="color:var(--cyan)">7.5h</div>
+          <div class="lbl">Sleep</div>
+        </div>
+        <div class="ic-metric">
+          <div class="val" style="color:var(--green)">55.1</div>
+          <div class="lbl">Pred. kg</div>
+        </div>
+        <div class="ic-metric">
+          <div class="val" style="color:var(--amber)">8/10</div>
+          <div class="lbl">Mood</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="floating-stats">
+      <div class="fstat">
+        <div class="fval">6</div>
+        <div class="flbl">Days Logged</div>
+      </div>
+      <div class="fstat">
+        <div class="fval">ML</div>
+        <div class="flbl">Predictions</div>
+      </div>
+      <div class="fstat">
+        <div class="fval">↑</div>
+        <div class="flbl">Trending</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="left-footer">
+    © 2026 FitTrack AI · Built by Sree Kirthana · JBIET, Hyderabad
+  </div>
+</div>
+
+<!-- RIGHT PANEL -->
+<div class="right-panel">
+  <div class="form-header">
+    <div class="welcome-back">
+      <i class="fas fa-circle" style="font-size:0.5rem"></i>
+      Welcome back
+    </div>
+    <h1>Sign in to FitTrack AI</h1>
+    <p>Don't have an account? <a href="register.html">Create one free →</a></p>
+  </div>
+
+  <!-- Error Message -->
+  <div class="error-msg" id="errorMsg">
+    <i class="fas fa-exclamation-circle"></i>
+    <span id="errorText">Something went wrong. Please try again.</span>
+  </div>
+
+  <form class="login-form" id="loginForm">
+
+    <!-- Email -->
+    <div class="form-group">
+      <label>Email Address</label>
+      <div class="input-wrapper">
+        <i class="fas fa-envelope input-icon"></i>
+        <input type="email" id="email" placeholder="you@example.com" required autocomplete="email">
+      </div>
+    </div>
+
+    <!-- User ID (temporary until auth is added) -->
+    <div class="form-group">
+      <label>
+        Your User ID
+        <span style="font-size:0.75rem;color:var(--muted);text-transform:none;letter-spacing:0">What's this?</span>
+      </label>
+      <div class="input-wrapper">
+        <i class="fas fa-id-badge input-icon"></i>
+        <input type="number" id="userId" placeholder="e.g. 1" min="1" required>
+      </div>
+      <span style="font-size:0.75rem;color:var(--muted);">Your user ID was assigned when you registered. Check your profile.</span>
+    </div>
+
+    <!-- Remember me -->
+    <div class="form-options">
+      <label class="remember-me">
+        <input type="checkbox" id="remember">
+        Remember me
+      </label>
+    </div>
+
+    <!-- Submit -->
+    <button type="submit" class="btn btn-primary" id="loginBtn">
+      <span class="spinner" id="spinner"></span>
+      <span id="btnText">Sign In <i class="fas fa-arrow-right"></i></span>
+    </button>
+
+    <!-- Divider -->
+    <div class="divider">or sign in quickly</div>
+
+    <!-- Quick Login -->
+    <div class="quick-login">
+      <div class="ql-info">
+        <strong>Demo Account</strong>
+        Testing the app? Use User ID: 1
+      </div>
+      <button type="button" class="ql-btn" onclick="quickLogin()">
+        Use Demo <i class="fas fa-bolt"></i>
+      </button>
+    </div>
+
+    <!-- Register link -->
+    <div class="register-link">
+      New to FitTrack AI? <a href="register.html">Create your free account</a>
+    </div>
+
+  </form>
+</div>
+
+<script>
+  function showError(msg) {
+    document.getElementById('errorText').textContent = msg;
+    document.getElementById('errorMsg').classList.add('show');
+  }
+
+  function hideError() {
+    document.getElementById('errorMsg').classList.remove('show');
+  }
+
+  function quickLogin() {
+    document.getElementById('email').value = 'honey@fittrack.com';
+    document.getElementById('userId').value = '1';
+  }
+
+  document.getElementById('loginForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    hideError();
+
+    const email = document.getElementById('email').value.trim();
+    const userId = document.getElementById('userId').value.trim();
+    const remember = document.getElementById('remember').checked;
+
+    if (!email) return showError('Please enter your email address.');
+    if (!userId) return showError('Please enter your User ID.');
+
+    const loginBtn = document.getElementById('loginBtn');
+    const spinner = document.getElementById('spinner');
+    const btnText = document.getElementById('btnText');
+
+    loginBtn.disabled = true;
+    spinner.style.display = 'block';
+    btnText.style.display = 'none';
+
+    try {
+      // Verify user exists by fetching dashboard
+      const res = await fetch(`http://127.0.0.1:5000/dashboard/${userId}`);
+      const data = await res.json();
+
+      if (data.user && data.user.email === email) {
+        // Save session
+        localStorage.setItem('user_id', userId);
+        localStorage.setItem('user_name', data.user.name);
+        if (remember) localStorage.setItem('remember_email', email);
+
+        // Redirect to dashboard
+        window.location.href = 'dashboard.html';
+      } else if (data.user && data.user.email !== email) {
+        showError('Email does not match our records for this User ID.');
+        loginBtn.disabled = false;
+        spinner.style.display = 'none';
+        btnText.style.display = 'inline';
+      } else {
+        showError('User not found. Please check your User ID.');
+        loginBtn.disabled = false;
+        spinner.style.display = 'none';
+        btnText.style.display = 'inline';
+      }
+    } catch (err) {
+      showError('Cannot connect to server. Make sure Flask is running on port 5000.');
+      loginBtn.disabled = false;
+      spinner.style.display = 'none';
+      btnText.style.display = 'inline';
+    }
+  });
+
+  // Auto-fill if remembered
+  window.addEventListener('load', () => {
+    const remembered = localStorage.getItem('remember_email');
+    if (remembered) {
+      document.getElementById('email').value = remembered;
+      document.getElementById('remember').checked = true;
+    }
+
+    // If already logged in, redirect to dashboard
+    const userId = localStorage.getItem('user_id');
+    if (userId) window.location.href = 'dashboard.html';
+  });
+</script>
+</body>
+</html>
