@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FitTrack AI — Log Mental Health</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+  :root {
+    --bg: #080c12; --bg2: #0d1117; --card: #111827; --card2: #1a2235;
+    --border: rgba(0,212,255,0.12); --border-hover: rgba(0,255,136,0.35);
+    --cyan: #00d4ff; --green: #00ff88; --amber: #ffb800; --red: #ff4757; --purple: #a855f7;
+    --text: #f0f6fc; --muted: #8b949e; --sidebar-w: 240px;
+    --font-head: 'Syne', sans-serif; --font-body: 'Space Grotesk', sans-serif;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--bg); color: var(--text); font-family: var(--font-body); min-height: 100vh; display: flex; }
+  .sidebar { width: var(--sidebar-w); background: var(--bg2); border-right: 1px solid var(--border); display: flex; flex-direction: column; position: fixed; top: 0; left: 0; bottom: 0; z-index: 100; }
+  .sidebar-header { padding: 28px 24px 20px; border-bottom: 1px solid var(--border); }
+  .logo { font-family: var(--font-head); font-size: 1.3rem; font-weight: 800; background: linear-gradient(135deg, var(--cyan), var(--green)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-decoration: none; display: block; margin-bottom: 4px; }
+  .logo-sub { font-size: 0.72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+  .sidebar-nav { flex: 1; padding: 16px 12px; overflow-y: auto; display: flex; flex-direction: column; gap: 4px; }
+  .nav-section { font-size: 0.68rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 1.5px; padding: 12px 12px 6px; }
+  .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 10px; color: var(--muted); text-decoration: none; font-size: 0.88rem; font-weight: 500; transition: all 0.2s; cursor: pointer; border: none; background: none; width: 100%; text-align: left; }
+  .nav-item:hover { background: rgba(0,212,255,0.06); color: var(--text); }
+  .nav-item.active { background: rgba(0,255,136,0.1); color: var(--green); border: 1px solid rgba(0,255,136,0.2); }
+  .nav-item i { width: 18px; text-align: center; font-size: 0.9rem; }
+  .sidebar-footer { padding: 16px 12px; border-top: 1px solid var(--border); }
+  .user-card { display: flex; align-items: center; gap: 10px; padding: 10px 12px; background: var(--card); border: 1px solid var(--border); border-radius: 10px; }
+  .user-avatar { width: 34px; height: 34px; border-radius: 50%; background: linear-gradient(135deg, var(--cyan), var(--green)); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem; color: #080c12; }
+  .user-info { flex: 1; }
+  .user-name { font-size: 0.85rem; font-weight: 600; }
+  .user-goal { font-size: 0.72rem; color: var(--muted); }
+  .main { margin-left: var(--sidebar-w); flex: 1; display: flex; flex-direction: column; }
+  .topbar { padding: 20px 32px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; background: rgba(8,12,18,0.8); backdrop-filter: blur(20px); position: sticky; top: 0; z-index: 50; }
+  .topbar h1 { font-family: var(--font-head); font-size: 1.4rem; font-weight: 800; }
+  .topbar h1 span { color: var(--green); }
+  .topbar p { font-size: 0.82rem; color: var(--muted); margin-top: 2px; }
+  .back-btn { display: flex; align-items: center; gap: 8px; color: var(--muted); text-decoration: none; font-size: 0.88rem; font-weight: 500; padding: 8px 16px; border-radius: 8px; border: 1px solid var(--border); transition: all 0.2s; }
+  .back-btn:hover { color: var(--green); border-color: var(--green); }
+  .content { padding: 32px; max-width: 800px; }
+  .form-card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 32px; margin-bottom: 20px; }
+  .form-card-header { display: flex; align-items: center; gap: 14px; margin-bottom: 28px; padding-bottom: 20px; border-bottom: 1px solid var(--border); }
+  .fch-icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
+  .fch-title { font-family: var(--font-head); font-size: 1.1rem; font-weight: 700; }
+  .fch-sub { font-size: 0.82rem; color: var(--muted); }
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .form-group { display: flex; flex-direction: column; gap: 8px; }
+  .form-group.full { grid-column: 1 / -1; }
+  label { font-size: 0.8rem; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
+  input, select, textarea { background: var(--card2); border: 1px solid var(--border); border-radius: 10px; padding: 12px 16px; color: var(--text); font-family: var(--font-body); font-size: 0.9rem; transition: all 0.3s; outline: none; width: 100%; }
+  input:focus, select:focus, textarea:focus { border-color: var(--green); box-shadow: 0 0 0 3px rgba(0,255,136,0.08); background: #1a2235; }
+  input::placeholder, textarea::placeholder { color: var(--muted); opacity: 0.6; }
+  textarea { resize: vertical; min-height: 80px; }
+
+  /* Mood emojis */
+  .mood-grid { display: flex; gap: 12px; flex-wrap: wrap; }
+  .mood-option input[type="radio"] { position: absolute; opacity: 0; width: 0; }
+  .mood-option { position: relative; }
+  .mood-option label { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 14px 16px; background: var(--card2); border: 2px solid var(--border); border-radius: 12px; cursor: pointer; transition: all 0.2s; min-width: 72px; }
+  .mood-emoji { font-size: 1.8rem; }
+  .mood-label { font-size: 0.72rem; color: var(--muted); font-weight: 500; text-transform: none; letter-spacing: 0; }
+  .mood-val { font-size: 0.7rem; color: var(--muted); }
+  .mood-option input:checked + label { border-color: var(--green); background: rgba(0,255,136,0.08); }
+  .mood-option input:checked + label .mood-label, .mood-option input:checked + label .mood-val { color: var(--green); }
+
+  /* Slider */
+  .slider-wrap { display: flex; flex-direction: column; gap: 10px; }
+  .slider-row { display: flex; align-items: center; gap: 12px; }
+  .slider-label { font-size: 0.8rem; color: var(--muted); width: 80px; }
+  input[type="range"] { flex: 1; accent-color: var(--green); height: 4px; cursor: pointer; background: var(--card2); border: none; border-radius: 100px; padding: 0; box-shadow: none; }
+  input[type="range"]:focus { border-color: transparent; box-shadow: none; }
+  .slider-val { font-family: var(--font-head); font-size: 1rem; font-weight: 700; width: 36px; text-align: center; }
+
+  .btn { padding: 13px 28px; border-radius: 10px; font-family: var(--font-body); font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: all 0.3s; border: none; display: inline-flex; align-items: center; gap: 8px; }
+  .btn-primary { background: linear-gradient(135deg, var(--green), #00cc6a); color: #080c12; box-shadow: 0 0 20px rgba(0,255,136,0.2); }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 0 30px rgba(0,255,136,0.4); }
+  .btn-primary:disabled { opacity: 0.6; transform: none; cursor: not-allowed; }
+  .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--muted); }
+  .btn-outline:hover { border-color: var(--border-hover); color: var(--text); }
+  .form-actions { display: flex; gap: 12px; margin-top: 8px; }
+  .success-toast { display: none; position: fixed; top: 24px; right: 24px; background: rgba(0,255,136,0.1); border: 1px solid rgba(0,255,136,0.3); border-radius: 12px; padding: 16px 20px; color: var(--green); font-size: 0.9rem; font-weight: 600; align-items: center; gap: 10px; z-index: 999; }
+  .success-toast.show { display: flex; }
+  .error-msg { display: none; background: rgba(255,71,87,0.08); border: 1px solid rgba(255,71,87,0.3); border-radius: 10px; padding: 12px 16px; font-size: 0.85rem; color: var(--red); align-items: center; gap: 8px; margin-bottom: 16px; }
+  .error-msg.show { display: flex; }
+  .spinner { width: 16px; height: 16px; border: 2px solid rgba(8,12,18,0.3); border-top-color: #080c12; border-radius: 50%; animation: spin 0.8s linear infinite; display: none; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Daily prompt */
+  .daily-prompt { background: rgba(168,85,247,0.06); border: 1px solid rgba(168,85,247,0.2); border-radius: 12px; padding: 20px; margin-bottom: 20px; }
+  .dp-label { font-size: 0.72rem; font-weight: 700; color: var(--purple); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+  .dp-question { font-size: 1rem; font-weight: 600; line-height: 1.5; }
+</style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="sidebar-header">
+    <a href="index.html" class="logo">FitTrackAI</a>
+    <div class="logo-sub">Health Intelligence</div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-section">Main</div>
+    <a href="dashboard.html" class="nav-item"><i class="fas fa-th-large"></i> Dashboard</a>
+    <a href="predict.html" class="nav-item"><i class="fas fa-robot"></i> AI Predictions</a>
+    <a href="history.html" class="nav-item"><i class="fas fa-calendar-alt"></i> History</a>
+    <div class="nav-section">Log Today</div>
+    <a href="log-workout.html" class="nav-item"><i class="fas fa-dumbbell"></i> Log Workout</a>
+    <a href="log-meal.html" class="nav-item"><i class="fas fa-utensils"></i> Log Meal</a>
+    <a href="log-health.html" class="nav-item"><i class="fas fa-heartbeat"></i> Log Health</a>
+    <a href="log-mental.html" class="nav-item active"><i class="fas fa-brain"></i> Log Mental</a>
+    <div class="nav-section">Account</div>
+    <a href="profile.html" class="nav-item"><i class="fas fa-user"></i> Profile</a>
+    <button class="nav-item" onclick="localStorage.clear();window.location.href='login.html'"><i class="fas fa-sign-out-alt"></i> Logout</button>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="user-card">
+      <div class="user-avatar" id="avatar">H</div>
+      <div class="user-info">
+        <div class="user-name" id="userName">Honey</div>
+        <div class="user-goal">Log mental health</div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<main class="main">
+  <div class="topbar">
+    <div>
+      <h1>Log <span>Mental Health</span></h1>
+      <p>How are you feeling today?</p>
+    </div>
+    <a href="dashboard.html" class="back-btn"><i class="fas fa-arrow-left"></i> Back to Dashboard</a>
+  </div>
+
+  <div class="content">
+
+    <!-- Daily Prompt -->
+    <div class="daily-prompt">
+      <div class="dp-label">🌟 Daily Reflection Prompt</div>
+      <div class="dp-question" id="dailyPrompt">Loading today's prompt...</div>
+    </div>
+
+    <div class="error-msg" id="errorMsg"><i class="fas fa-exclamation-circle"></i><span id="errorText"></span></div>
+
+    <form id="mentalForm">
+
+      <!-- Mood -->
+      <div class="form-card">
+        <div class="form-card-header">
+          <div class="fch-icon" style="background:rgba(0,255,136,0.1);color:var(--green)"><i class="fas fa-smile"></i></div>
+          <div><div class="fch-title">How's Your Mood?</div><div class="fch-sub">Pick the emoji that best describes today</div></div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:12px;">
+          <div class="form-group">
+            <label>Date</label>
+            <input type="date" id="date" style="max-width:200px;" required>
+          </div>
+          <div class="mood-grid">
+            <div class="mood-option"><input type="radio" name="mood" id="mood1" value="1"><label for="mood1"><span class="mood-emoji">😭</span><span class="mood-label">Terrible</span><span class="mood-val">1/10</span></label></div>
+            <div class="mood-option"><input type="radio" name="mood" id="mood2" value="2"><label for="mood2"><span class="mood-emoji">😢</span><span class="mood-label">Very Low</span><span class="mood-val">2/10</span></label></div>
+            <div class="mood-option"><input type="radio" name="mood" id="mood3" value="3"><label for="mood3"><span class="mood-emoji">😔</span><span class="mood-label">Low</span><span class="mood-val">3/10</span></label></div>
+            <div class="mood-option"><input type="radio" name="mood" id="mood4" value="4"><label for="mood4"><span class="mood-emoji">😕</span><span class="mood-label">Below Avg</span><span class="mood-val">4/10</span></label></div>
+            <div class="mood-option"><input type="radio" name="mood" id="mood5" value="5"><label for="mood5"><span class="mood-emoji">😐</span><span class="mood-label">Neutral</span><span class="mood-val">5/10</span></label></div>
+            <div class="mood-option"><input type="radio" name="mood" id="mood6" value="6"><label for="mood6"><span class="mood-emoji">🙂</span><span class="mood-label">Okay</span><span class="mood-val">6/10</span></label></div>
+            <div class="mood-option"><input type="radio" name="mood" id="mood7" value="7" checked><label for="mood7"><span class="mood-emoji">😊</span><span class="mood-label">Good</span><span class="mood-val">7/10</span></label></div>
+            <div class="mood-option"><input type="radio" name="mood" id="mood8" value="8"><label for="mood8"><span class="mood-emoji">😄</span><span class="mood-label">Great</span><span class="mood-val">8/10</span></label></div>
+            <div class="mood-option"><input type="radio" name="mood" id="mood9" value="9"><label for="mood9"><span class="mood-emoji">😁</span><span class="mood-label">Very Good</span><span class="mood-val">9/10</span></label></div>
+            <div class="mood-option"><input type="radio" name="mood" id="mood10" value="10"><label for="mood10"><span class="mood-emoji">🤩</span><span class="mood-label">Amazing!</span><span class="mood-val">10/10</span></label></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sliders -->
+      <div class="form-card">
+        <div class="form-card-header">
+          <div class="fch-icon" style="background:rgba(168,85,247,0.1);color:var(--purple)"><i class="fas fa-sliders-h"></i></div>
+          <div><div class="fch-title">Energy & Stress</div><div class="fch-sub">Rate your levels for today</div></div>
+        </div>
+        <div class="slider-wrap">
+          <div>
+            <label style="display:block;margin-bottom:10px;">Stress Level</label>
+            <div class="slider-row">
+              <span class="slider-label" style="color:var(--green)">😌 Calm</span>
+              <input type="range" id="stress" min="1" max="10" value="4" oninput="updateSlider('stress','stressVal')">
+              <span class="slider-val" id="stressVal" style="color:var(--red)">4</span>
+              <span class="slider-label" style="color:var(--red)">😤 Stressed</span>
+            </div>
+          </div>
+          <div>
+            <label style="display:block;margin-bottom:10px;">Morning Energy</label>
+            <div class="slider-row">
+              <span class="slider-label" style="color:var(--red)">😴 Drained</span>
+              <input type="range" id="energy_am" min="1" max="10" value="6" oninput="updateSlider('energy_am','energyAmVal')">
+              <span class="slider-val" id="energyAmVal" style="color:var(--green)">6</span>
+              <span class="slider-label" style="color:var(--green)">⚡ Energized</span>
+            </div>
+          </div>
+          <div>
+            <label style="display:block;margin-bottom:10px;">Evening Energy</label>
+            <div class="slider-row">
+              <span class="slider-label" style="color:var(--red)">😴 Drained</span>
+              <input type="range" id="energy_pm" min="1" max="10" value="5" oninput="updateSlider('energy_pm','energyPmVal')">
+              <span class="slider-val" id="energyPmVal" style="color:var(--amber)">5</span>
+              <span class="slider-label" style="color:var(--green)">⚡ Energized</span>
+            </div>
+          </div>
+          <div>
+            <label style="display:block;margin-bottom:10px;">Work Productivity</label>
+            <div class="slider-row">
+              <span class="slider-label" style="color:var(--red)">😶 None</span>
+              <input type="range" id="productivity" min="1" max="10" value="7" oninput="updateSlider('productivity','productivityVal')">
+              <span class="slider-val" id="productivityVal" style="color:var(--cyan)">7</span>
+              <span class="slider-label" style="color:var(--green)">🚀 Peak</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Notes -->
+      <div class="form-card">
+        <div class="form-card-header">
+          <div class="fch-icon" style="background:rgba(0,212,255,0.1);color:var(--cyan)"><i class="fas fa-pen"></i></div>
+          <div><div class="fch-title">Daily Notes</div><div class="fch-sub">Anything on your mind? (optional)</div></div>
+        </div>
+        <textarea id="notes" placeholder="How was your day? What felt good? What was challenging? Write anything..."></textarea>
+      </div>
+
+      <div class="form-actions">
+        <a href="dashboard.html" class="btn btn-outline"><i class="fas fa-times"></i> Cancel</a>
+        <button type="submit" class="btn btn-primary" id="submitBtn">
+          <span class="spinner" id="spinner"></span>
+          <span id="submitText"><i class="fas fa-check"></i> Save Mental Log</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</main>
+
+<div class="success-toast" id="successToast"><i class="fas fa-check-circle"></i> Mental health logged! 🧠✨</div>
+
+<script>
+  const API = 'http://127.0.0.1:5000';
+  const userId = localStorage.getItem('user_id') || 1;
+  const userName = localStorage.getItem('user_name') || 'Honey';
+  document.getElementById('userName').textContent = userName;
+  document.getElementById('avatar').textContent = userName[0].toUpperCase();
+  document.getElementById('date').value = new Date().toISOString().split('T')[0];
+
+  // Daily prompts
+  const prompts = [
+    "What is one thing that made you smile today?",
+    "What are you grateful for right now?",
+    "What felt challenging today, and how did you handle it?",
+    "What is one small win you had today?",
+    "How did your body feel today — energized or tired?",
+    "What's one thing you'd do differently tomorrow?",
+    "Who or what gave you energy today?",
+    "What are you looking forward to tomorrow?"
+  ];
+  document.getElementById('dailyPrompt').textContent = prompts[new Date().getDay() % prompts.length];
+
+  function updateSlider(id, valId) {
+    document.getElementById(valId).textContent = document.getElementById(id).value;
+  }
+
+  document.getElementById('mentalForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const mood = document.querySelector('input[name="mood"]:checked')?.value;
+    if (!mood) { showError('Please select your mood.'); return; }
+    setLoading(true);
+    try {
+      const res = await fetch(`${API}/log/mental`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          user_id: parseInt(userId),
+          date: document.getElementById('date').value,
+          mood: parseInt(mood),
+          stress: parseInt(document.getElementById('stress').value),
+          energy_am: parseInt(document.getElementById('energy_am').value),
+          energy_pm: parseInt(document.getElementById('energy_pm').value),
+          productivity: parseInt(document.getElementById('productivity').value),
+          notes: document.getElementById('notes').value
+        })
+      });
+      const data = await res.json();
+      if (data.message) {
+        document.getElementById('successToast').classList.add('show');
+        setTimeout(() => window.location.href = 'dashboard.html', 2000);
+      } else showError(data.error || 'Failed to log mental health.');
+    } catch { showError('Cannot connect to server. Make sure Flask is running.'); }
+    setLoading(false);
+  });
+
+  function showError(msg) { document.getElementById('errorText').textContent = msg; document.getElementById('errorMsg').classList.add('show'); }
+  function setLoading(v) {
+    document.getElementById('submitBtn').disabled = v;
+    document.getElementById('spinner').style.display = v ? 'block' : 'none';
+    document.getElementById('submitText').style.display = v ? 'none' : 'inline';
+  }
+</script>
+</body>
+</html>

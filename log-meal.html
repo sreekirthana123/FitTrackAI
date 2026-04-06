@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FitTrack AI — Log Meal</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+  :root {
+    --bg: #080c12; --bg2: #0d1117; --card: #111827; --card2: #1a2235;
+    --border: rgba(0,212,255,0.12); --border-hover: rgba(0,212,255,0.35);
+    --cyan: #00d4ff; --green: #00ff88; --amber: #ffb800; --red: #ff4757; --purple: #a855f7;
+    --text: #f0f6fc; --muted: #8b949e; --sidebar-w: 240px;
+    --font-head: 'Syne', sans-serif; --font-body: 'Space Grotesk', sans-serif;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--bg); color: var(--text); font-family: var(--font-body); min-height: 100vh; display: flex; }
+  .sidebar { width: var(--sidebar-w); background: var(--bg2); border-right: 1px solid var(--border); display: flex; flex-direction: column; position: fixed; top: 0; left: 0; bottom: 0; z-index: 100; }
+  .sidebar-header { padding: 28px 24px 20px; border-bottom: 1px solid var(--border); }
+  .logo { font-family: var(--font-head); font-size: 1.3rem; font-weight: 800; background: linear-gradient(135deg, var(--cyan), var(--green)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-decoration: none; display: block; margin-bottom: 4px; }
+  .logo-sub { font-size: 0.72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+  .sidebar-nav { flex: 1; padding: 16px 12px; overflow-y: auto; display: flex; flex-direction: column; gap: 4px; }
+  .nav-section { font-size: 0.68rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 1.5px; padding: 12px 12px 6px; }
+  .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 10px; color: var(--muted); text-decoration: none; font-size: 0.88rem; font-weight: 500; transition: all 0.2s; cursor: pointer; border: none; background: none; width: 100%; text-align: left; }
+  .nav-item:hover { background: rgba(0,212,255,0.06); color: var(--text); }
+  .nav-item.active { background: rgba(255,184,0,0.1); color: var(--amber); border: 1px solid rgba(255,184,0,0.2); }
+  .nav-item i { width: 18px; text-align: center; font-size: 0.9rem; }
+  .sidebar-footer { padding: 16px 12px; border-top: 1px solid var(--border); }
+  .user-card { display: flex; align-items: center; gap: 10px; padding: 10px 12px; background: var(--card); border: 1px solid var(--border); border-radius: 10px; }
+  .user-avatar { width: 34px; height: 34px; border-radius: 50%; background: linear-gradient(135deg, var(--cyan), var(--green)); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem; color: #080c12; }
+  .user-info { flex: 1; }
+  .user-name { font-size: 0.85rem; font-weight: 600; }
+  .user-goal { font-size: 0.72rem; color: var(--muted); }
+  .main { margin-left: var(--sidebar-w); flex: 1; display: flex; flex-direction: column; }
+  .topbar { padding: 20px 32px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; background: rgba(8,12,18,0.8); backdrop-filter: blur(20px); position: sticky; top: 0; z-index: 50; }
+  .topbar h1 { font-family: var(--font-head); font-size: 1.4rem; font-weight: 800; }
+  .topbar h1 span { color: var(--amber); }
+  .topbar p { font-size: 0.82rem; color: var(--muted); margin-top: 2px; }
+  .back-btn { display: flex; align-items: center; gap: 8px; color: var(--muted); text-decoration: none; font-size: 0.88rem; font-weight: 500; padding: 8px 16px; border-radius: 8px; border: 1px solid var(--border); transition: all 0.2s; }
+  .back-btn:hover { color: var(--amber); border-color: var(--amber); }
+  .content { padding: 32px; max-width: 800px; }
+  .form-card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 32px; margin-bottom: 20px; }
+  .form-card-header { display: flex; align-items: center; gap: 14px; margin-bottom: 28px; padding-bottom: 20px; border-bottom: 1px solid var(--border); }
+  .fch-icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
+  .fch-title { font-family: var(--font-head); font-size: 1.1rem; font-weight: 700; }
+  .fch-sub { font-size: 0.82rem; color: var(--muted); }
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .form-group { display: flex; flex-direction: column; gap: 8px; }
+  .form-group.full { grid-column: 1 / -1; }
+  label { font-size: 0.8rem; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
+  input, select { background: var(--card2); border: 1px solid var(--border); border-radius: 10px; padding: 12px 16px; color: var(--text); font-family: var(--font-body); font-size: 0.9rem; transition: all 0.3s; outline: none; width: 100%; }
+  input:focus, select:focus { border-color: var(--amber); box-shadow: 0 0 0 3px rgba(255,184,0,0.08); background: #1a2235; }
+  input::placeholder { color: var(--muted); opacity: 0.6; }
+  select option { background: var(--card2); }
+
+  /* Meal type selector */
+  .meal-type-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+  .mt-option input[type="radio"] { position: absolute; opacity: 0; width: 0; }
+  .mt-option { position: relative; }
+  .mt-option label { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 14px 10px; background: var(--card2); border: 1px solid var(--border); border-radius: 10px; cursor: pointer; transition: all 0.2s; text-align: center; text-transform: none; letter-spacing: 0; color: var(--muted); font-size: 0.82rem; font-weight: 500; }
+  .mt-option label .mt-icon { font-size: 1.3rem; }
+  .mt-option input:checked + label { border-color: var(--amber); background: rgba(255,184,0,0.08); color: var(--amber); }
+
+  /* Quick food suggestions */
+  .food-suggestions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+  .food-chip { background: var(--card2); border: 1px solid var(--border); border-radius: 100px; padding: 5px 12px; font-size: 0.78rem; color: var(--muted); cursor: pointer; transition: all 0.2s; }
+  .food-chip:hover { border-color: var(--amber); color: var(--amber); }
+
+  /* Water tracker */
+  .water-tracker { display: flex; align-items: center; gap: 16px; }
+  .water-glasses { display: flex; gap: 8px; flex-wrap: wrap; }
+  .glass { width: 36px; height: 36px; border-radius: 8px; border: 2px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 1rem; cursor: pointer; transition: all 0.2s; color: var(--muted); }
+  .glass.filled { border-color: var(--cyan); background: rgba(0,212,255,0.1); color: var(--cyan); }
+  .water-label { font-size: 0.85rem; color: var(--muted); }
+
+  /* Calorie summary */
+  .cal-summary { background: rgba(255,184,0,0.05); border: 1px solid rgba(255,184,0,0.15); border-radius: 10px; padding: 14px 18px; display: flex; align-items: center; justify-content: space-between; }
+  .cal-sum-label { font-size: 0.82rem; color: var(--muted); }
+  .cal-sum-val { font-family: var(--font-head); font-size: 1.3rem; font-weight: 800; color: var(--amber); }
+
+  .btn { padding: 13px 28px; border-radius: 10px; font-family: var(--font-body); font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: all 0.3s; border: none; display: inline-flex; align-items: center; gap: 8px; }
+  .btn-primary { background: linear-gradient(135deg, var(--amber), #cc9000); color: #080c12; box-shadow: 0 0 20px rgba(255,184,0,0.2); }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 0 30px rgba(255,184,0,0.4); }
+  .btn-primary:disabled { opacity: 0.6; transform: none; cursor: not-allowed; }
+  .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--muted); }
+  .btn-outline:hover { border-color: var(--border-hover); color: var(--text); }
+  .form-actions { display: flex; gap: 12px; margin-top: 8px; }
+  .success-toast { display: none; position: fixed; top: 24px; right: 24px; background: rgba(255,184,0,0.1); border: 1px solid rgba(255,184,0,0.3); border-radius: 12px; padding: 16px 20px; color: var(--amber); font-size: 0.9rem; font-weight: 600; align-items: center; gap: 10px; z-index: 999; }
+  .success-toast.show { display: flex; }
+  .error-msg { display: none; background: rgba(255,71,87,0.08); border: 1px solid rgba(255,71,87,0.3); border-radius: 10px; padding: 12px 16px; font-size: 0.85rem; color: var(--red); align-items: center; gap: 8px; margin-bottom: 16px; }
+  .error-msg.show { display: flex; }
+  .spinner { width: 16px; height: 16px; border: 2px solid rgba(8,12,18,0.3); border-top-color: #080c12; border-radius: 50%; animation: spin 0.8s linear infinite; display: none; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="sidebar-header">
+    <a href="index.html" class="logo">FitTrackAI</a>
+    <div class="logo-sub">Health Intelligence</div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-section">Main</div>
+    <a href="dashboard.html" class="nav-item"><i class="fas fa-th-large"></i> Dashboard</a>
+    <a href="predict.html" class="nav-item"><i class="fas fa-robot"></i> AI Predictions</a>
+    <a href="history.html" class="nav-item"><i class="fas fa-calendar-alt"></i> History</a>
+    <div class="nav-section">Log Today</div>
+    <a href="log-workout.html" class="nav-item"><i class="fas fa-dumbbell"></i> Log Workout</a>
+    <a href="log-meal.html" class="nav-item active"><i class="fas fa-utensils"></i> Log Meal</a>
+    <a href="log-health.html" class="nav-item"><i class="fas fa-heartbeat"></i> Log Health</a>
+    <a href="log-mental.html" class="nav-item"><i class="fas fa-brain"></i> Log Mental</a>
+    <div class="nav-section">Account</div>
+    <a href="profile.html" class="nav-item"><i class="fas fa-user"></i> Profile</a>
+    <button class="nav-item" onclick="localStorage.clear();window.location.href='login.html'"><i class="fas fa-sign-out-alt"></i> Logout</button>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="user-card">
+      <div class="user-avatar" id="avatar">H</div>
+      <div class="user-info">
+        <div class="user-name" id="userName">Honey</div>
+        <div class="user-goal">Log your meal</div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<main class="main">
+  <div class="topbar">
+    <div>
+      <h1>Log <span>Meal</span></h1>
+      <p>Track your nutrition for today</p>
+    </div>
+    <a href="dashboard.html" class="back-btn"><i class="fas fa-arrow-left"></i> Back to Dashboard</a>
+  </div>
+
+  <div class="content">
+    <div class="error-msg" id="errorMsg"><i class="fas fa-exclamation-circle"></i><span id="errorText"></span></div>
+
+    <form id="mealForm">
+      <!-- Meal Type -->
+      <div class="form-card">
+        <div class="form-card-header">
+          <div class="fch-icon" style="background:rgba(255,184,0,0.1);color:var(--amber)"><i class="fas fa-utensils"></i></div>
+          <div><div class="fch-title">Meal Type</div><div class="fch-sub">Which meal are you logging?</div></div>
+        </div>
+        <div class="meal-type-grid">
+          <div class="mt-option"><input type="radio" name="meal_type" id="m1" value="breakfast"><label for="m1"><span class="mt-icon">🌅</span>Breakfast</label></div>
+          <div class="mt-option"><input type="radio" name="meal_type" id="m2" value="lunch" checked><label for="m2"><span class="mt-icon">☀️</span>Lunch</label></div>
+          <div class="mt-option"><input type="radio" name="meal_type" id="m3" value="dinner"><label for="m3"><span class="mt-icon">🌙</span>Dinner</label></div>
+          <div class="mt-option"><input type="radio" name="meal_type" id="m4" value="snack"><label for="m4"><span class="mt-icon">🍎</span>Snack</label></div>
+        </div>
+      </div>
+
+      <!-- Food Details -->
+      <div class="form-card">
+        <div class="form-card-header">
+          <div class="fch-icon" style="background:rgba(255,184,0,0.1);color:var(--amber)"><i class="fas fa-apple-alt"></i></div>
+          <div><div class="fch-title">Food Details</div><div class="fch-sub">What did you eat?</div></div>
+        </div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Date</label>
+            <input type="date" id="date" required>
+          </div>
+          <div class="form-group">
+            <label>Calories (kcal)</label>
+            <input type="number" id="calories" placeholder="e.g. 350" min="0" required>
+          </div>
+          <div class="form-group full">
+            <label>Food Name</label>
+            <input type="text" id="food_name" placeholder="e.g. Chicken Biryani, Idli, Salad..." required>
+            <div class="food-suggestions">
+              <span class="food-chip" onclick="setFood('Idli',150)">🍚 Idli</span>
+              <span class="food-chip" onclick="setFood('Dosa',180)">🫓 Dosa</span>
+              <span class="food-chip" onclick="setFood('Rice & Dal',400)">🍛 Rice & Dal</span>
+              <span class="food-chip" onclick="setFood('Chapati',120)">🫓 Chapati</span>
+              <span class="food-chip" onclick="setFood('Chicken Biryani',550)">🍗 Biryani</span>
+              <span class="food-chip" onclick="setFood('Banana',90)">🍌 Banana</span>
+              <span class="food-chip" onclick="setFood('Curd Rice',280)">🍚 Curd Rice</span>
+              <span class="food-chip" onclick="setFood('Egg',80)">🥚 Egg</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Water Intake -->
+      <div class="form-card">
+        <div class="form-card-header">
+          <div class="fch-icon" style="background:rgba(0,212,255,0.1);color:var(--cyan)"><i class="fas fa-tint"></i></div>
+          <div><div class="fch-title">Water Intake</div><div class="fch-sub">How much water with this meal?</div></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:20px;flex-wrap:wrap;">
+          <div class="water-glasses" id="waterGlasses"></div>
+          <div>
+            <div style="font-family:var(--font-head);font-size:1.5rem;font-weight:800;color:var(--cyan)" id="waterVal">0</div>
+            <div style="font-size:0.75rem;color:var(--muted)">ml of water</div>
+          </div>
+        </div>
+        <input type="hidden" id="water_ml" value="0">
+      </div>
+
+      <div class="form-actions">
+        <a href="dashboard.html" class="btn btn-outline"><i class="fas fa-times"></i> Cancel</a>
+        <button type="submit" class="btn btn-primary" id="submitBtn">
+          <span class="spinner" id="spinner"></span>
+          <span id="submitText"><i class="fas fa-check"></i> Log Meal</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</main>
+
+<div class="success-toast" id="successToast"><i class="fas fa-check-circle"></i> Meal logged successfully! 🍽️</div>
+
+<script>
+  const API = 'http://127.0.0.1:5000';
+  const userId = localStorage.getItem('user_id') || 1;
+  const userName = localStorage.getItem('user_name') || 'Honey';
+  document.getElementById('userName').textContent = userName;
+  document.getElementById('avatar').textContent = userName[0].toUpperCase();
+  document.getElementById('date').value = new Date().toISOString().split('T')[0];
+
+  // Water glasses
+  let waterGlasses = 0;
+  const glassesEl = document.getElementById('waterGlasses');
+  for (let i = 1; i <= 8; i++) {
+    const g = document.createElement('div');
+    g.className = 'glass';
+    g.innerHTML = '💧';
+    g.title = `${i * 250}ml`;
+    g.addEventListener('click', () => {
+      waterGlasses = waterGlasses === i ? 0 : i;
+      document.querySelectorAll('.glass').forEach((gl, idx) => {
+        gl.classList.toggle('filled', idx < waterGlasses);
+      });
+      const ml = waterGlasses * 250;
+      document.getElementById('waterVal').textContent = ml;
+      document.getElementById('water_ml').value = ml;
+    });
+    glassesEl.appendChild(g);
+  }
+
+  function setFood(name, cal) {
+    document.getElementById('food_name').value = name;
+    document.getElementById('calories').value = cal;
+  }
+
+  document.getElementById('mealForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const meal_type = document.querySelector('input[name="meal_type"]:checked')?.value;
+    if (!meal_type) { showError('Please select a meal type.'); return; }
+    setLoading(true);
+    try {
+      const res = await fetch(`${API}/log/meal`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          user_id: parseInt(userId),
+          date: document.getElementById('date').value,
+          food_name: document.getElementById('food_name').value,
+          calories: parseFloat(document.getElementById('calories').value),
+          meal_type,
+          water_ml: parseFloat(document.getElementById('water_ml').value) || 0
+        })
+      });
+      const data = await res.json();
+      if (data.message) {
+        document.getElementById('successToast').classList.add('show');
+        setTimeout(() => window.location.href = 'dashboard.html', 2000);
+      } else showError(data.error || 'Failed to log meal.');
+    } catch { showError('Cannot connect to server. Make sure Flask is running.'); }
+    setLoading(false);
+  });
+
+  function showError(msg) { document.getElementById('errorText').textContent = msg; document.getElementById('errorMsg').classList.add('show'); }
+  function setLoading(v) {
+    document.getElementById('submitBtn').disabled = v;
+    document.getElementById('spinner').style.display = v ? 'block' : 'none';
+    document.getElementById('submitText').style.display = v ? 'none' : 'inline';
+  }
+</script>
+</body>
+</html>
