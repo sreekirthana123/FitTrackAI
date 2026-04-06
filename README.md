@@ -162,7 +162,7 @@ http://127.0.0.1:5000/
 
 ## 👩‍💻 Author
 
-**V Sree Keerthana**
+**V Sree Kirthana**
 B.Tech CSE — JBIET, Hyderabad
 2nd Year | AI/ML Engineer in process
 sreekeerthana64@gmail.com
